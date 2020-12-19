@@ -10,7 +10,7 @@ use RetailCrm\ApiClient;
 
 $log = new Logger('Request');
 $log->pushHandler(new StreamHandler('logs/' . date("Y-m-d"). '.log', Logger::INFO));
-file_put_contents('log.log', print_r([$_REQUEST], true));
+
 try {
     $retailClient = new ApiClient(
         RETAIL_URL,
