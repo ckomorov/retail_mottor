@@ -4,7 +4,6 @@ namespace App;
 
 use Monolog\Logger;
 use RetailCrm\ApiClient;
-use RetailCrm\Exception\CurlException;
 
 class RequestController
 {
@@ -49,7 +48,7 @@ class RequestController
             'customerComment' => $request['frm_title'] . PHP_EOL . $request['extra'],
         ];
 
-        if (strpos($request['extra'], 'пусковое устройство')) {
+        if (isset($request['extra']) && strpos($request['extra'], 'пусковое устройство')) {
             $positionId = $this->getPosition($request['extra']);
         } elseif (isset($request['frm_title'])) {
             $positionId = $this->getPosition($request['frm_title']);
@@ -66,10 +65,7 @@ class RequestController
         try {
             $response = $client->request->ordersCreate($data);
         } catch (\RetailCrm\Exception\CurlException $e) {
-            $this->logger->error(
-                date("Y-m-d H:i:s: ") . "Connection error: ",
-                [json_encode($e->getMessage(), JSON_UNESCAPED_UNICODE)]
-            );
+            $this->logger->error("Connection error: ", [$e->getMessage()]);
         }
 
         if ($response->isSuccessful() && 201 === $response->getStatusCode()) {
@@ -86,7 +82,7 @@ class RequestController
         return [];
     }
 
-    public function getPosition(string $data): int
+    private function getPosition(string $data): int
     {
         $result = 0;
 
