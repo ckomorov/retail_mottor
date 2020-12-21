@@ -1,2 +1,2 @@
 # retail_mottor
-Simple integration between retailCRM and LpMotor
+Simple custom integration between retailCRM and LpMotor
